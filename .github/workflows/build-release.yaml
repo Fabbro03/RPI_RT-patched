@@ -19,7 +19,7 @@ jobs:
       - name: Run Makefile for ${{ matrix.target }}
         run: |
           echo "Running make for target: ${{ matrix.target }}"
-          sudo make build TARGET=${{ matrix.target }}
+          sudo make ${{ matrix.target }}
 
       - name: Archive Build Artifacts for ${{ matrix.target }}
         run: |
