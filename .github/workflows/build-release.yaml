@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [Pi3, Pi3-32] #, Pi4, Pi400, PiZero2, PiCM3, PiCM4, Pi5, Pi1, PiZero, PiCM1, Pi2, Pi3-32, PiCM3-32, PiZero2-32, Pi4-32, Pi400-32, PiCM4-32, Pi3-Full, Pi4-Full, Pi400-Full, PiZero2-Full, PiCM3-Full, PiCM4-Full, Pi5-Full, Pi1-Full, PiZero-Full, PiCM1-Full, Pi2-Full, Pi3-32-Full, PiCM3-32-Full, PiZero2-32-Full, Pi4-32-Full, Pi400-32-Full, PiCM4-32-Full]  # List your target devices here
+        target: [Pi3, PiZeroW] #, Pi4, Pi400, PiZero2, PiCM3, PiCM4, Pi5, Pi1, PiZero, PiCM1, Pi2, Pi3-32, PiCM3-32, PiZero2-32, Pi4-32, Pi400-32, PiCM4-32, Pi3-Full, Pi4-Full, Pi400-Full, PiZero2-Full, PiCM3-Full, PiCM4-Full, Pi5-Full, Pi1-Full, PiZero-Full, PiCM1-Full, Pi2-Full, Pi3-32-Full, PiCM3-32-Full, PiZero2-32-Full, Pi4-32-Full, Pi400-32-Full, PiCM4-32-Full]  # List your target devices here
 
     steps:
       - name: Checkout code
