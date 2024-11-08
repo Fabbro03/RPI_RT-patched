@@ -1,0 +1,70 @@
+name: Build and Release for Raspberry Pi
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger only on new tags
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [Pi3, Pi3-32] #, Pi4, Pi400, PiZero2, PiCM3, PiCM4, Pi5, Pi1, PiZero, PiCM1, Pi2, Pi3-32, PiCM3-32, PiZero2-32, Pi4-32, Pi400-32, PiCM4-32, Pi3-Full, Pi4-Full, Pi400-Full, PiZero2-Full, PiCM3-Full, PiCM4-Full, Pi5-Full, Pi1-Full, PiZero-Full, PiCM1-Full, Pi2-Full, Pi3-32-Full, PiCM3-32-Full, PiZero2-32-Full, Pi4-32-Full, Pi400-32-Full, PiCM4-32-Full]  # List your target devices here
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Makefile for ${{ matrix.target }}
+        run: |
+          echo "Running make for target: ${{ matrix.target }}"
+          sudo make ${{ matrix.target }}
+
+      - name: Archive Build Artifacts for ${{ matrix.target }}
+        run: |
+          mkdir -p release_builds/${{ matrix.target }}
+          cp -r build/* release_builds/${{ matrix.target }}/
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.target }}
+          path: release_builds/${{ matrix.target }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download All Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release_builds
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: "Release ${{ github.ref_name }}"
+          body: |
+            # NOT PRODUCTION READY - I DON'T RECOMMEND TO USE THIS REPOS AND RELATIVES RELEASES
+          draft: false
+          prerelease: true
+
+      - name: Upload Each Artifact to Release
+        shell: bash
+        run: |
+          for file in release_builds/**/*; do
+            if [[ -f "$file" ]]; then
+              echo "Uploading $file"
+              gh release upload "${{ github.ref_name }}" "$file" --repo "${{ github.repository }}" --clobber
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
