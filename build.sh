@@ -129,7 +129,7 @@ configure_kernel(){
 	./scripts/config --enable CONFIG_HIGH_RES_TIMERS
 	./scripts/config --set-val CONFIG_HZ 1000
 	./scripts/config --enable CONFIG_IRQ_FORCED_THREADING
-    if ["$ARCH" = "arm"]; then
+    if [ "$ARCH" = "arm" ]; then
         ./scripts/config --enable CONFIG_SMP
         ./scripts/config --disable CONFIG_BROKEN_ON_SMP
     fi

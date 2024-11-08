@@ -20,7 +20,6 @@ jobs:
         run: |
           echo "Running build for target: ${{ matrix.target }}"
           chmod +x build.sh
-          ls | echo
           sudo ./build.sh ${{ matrix.target }}
 
       - name: Archive Build Artifacts for ${{ matrix.target }}
