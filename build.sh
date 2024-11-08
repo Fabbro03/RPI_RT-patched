@@ -85,9 +85,11 @@ build(){
     else
         make -j$((`nproc`+1)) ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE zImage modules dtbs
     fi
+    cd ..
 }
 
 install(){
+    cd linux
     echo "Installing $KERNEL"
     export OUTPUT=$(sfdisk -lJ ../$RASPIOS)
     export BOOT_START=$(echo $OUTPUT | jq -r '.partitiontable.partitions[0].start')
@@ -98,7 +100,7 @@ install(){
     mkdir -p mnt/boot
     mount -t ext4 -o loop,offset=$(($EXT4_START*512)) ../$RASPIOS mnt/root
     mount -t vfat -o loop,offset=$(($BOOT_START*512)),sizelimit=$(($BOOT_SIZE*512)) ../$RASPIOS mnt/boot
-    env PATH=$PATH make -j$((`nproc`*1.5)) ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=mnt/root modules_install
+    env PATH=$PATH make -j$((`nproc`*2)) ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=mnt/root modules_install
     cp mnt/boot/$KERNEL.img mnt/boot/$KERNEL-backup.img
     if [ "$ARCH" = "arm64" ]; then
         cp arch/$ARCH/boot/Image mnt/boot/$KERNEL.img
