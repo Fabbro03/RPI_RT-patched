@@ -38,6 +38,7 @@ esac
 prepare_system(){
     echo "Installing/updating required packages"
 	apt-get -qq update
+    apt-get -qq --yes upgrade
     if [ $ARCH = "arm64" ]; then
         apt-get -qq --yes install git fdisk zip bc bison flex libssl-dev make libc6-dev libncurses5-dev crossbuild-essential-arm64
     else
@@ -110,6 +111,8 @@ install(){
     cp arch/$ARCH/boot/dts/broadcom/*.dtb mnt/boot/
     cp arch/$ARCH/boot/dts/overlays/*.dtb* mnt/boot/overlays/
     cp arch/$ARCH/boot/dts/overlays/README mnt/boot/overlays/
+    echo "Blocking kernel updates"
+    echo -e "Package: raspi-firmware\nPin: release *\nPin-Priority: -1" | tee /etc/apt/preferences.d/raspi-firmware > /dev/null
     umount mnt/boot
     umount mnt/root
     cd ..
