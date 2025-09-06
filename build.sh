@@ -32,8 +32,7 @@ download_image(){
     echo "[*] Downloading ${RASPIOS_IMAGE_NAME}.xz"
     curl -s https://downloads.raspberrypi.org/${RASPIOS}/images/${RASPIOS}-${DATE}/${RASPIOS_IMAGE_NAME}.xz \
         --output ${RASPIOS}.xz
-    xz -d -f ${RASPIOS}.xz
-    mv "${RASPIOS_IMAGE_NAME%.xz}" ${RASPIOS}.img
+    xz -dc -f ${RASPIOS}.xz > ${RASPIOS}.img
 }
 
 download_kernel_src(){
