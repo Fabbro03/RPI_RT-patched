@@ -33,9 +33,7 @@ download_image(){
     curl -s https://downloads.raspberrypi.org/${RASPIOS}/images/${RASPIOS}-${DATE}/${RASPIOS_IMAGE_NAME}.xz \
         --output ${RASPIOS}.xz
     xz -d -f ${RASPIOS}.xz
-    # Detect the extracted filename
-    IMG_EXTRACTED=$(ls -1 *.img | head -n 1)
-    mv "$IMG_EXTRACTED" ${RASPIOS}.img
+    mv "${RASPIOS_IMAGE_NAME%.xz}" ${RASPIOS}.img
 }
 
 download_kernel_src(){
