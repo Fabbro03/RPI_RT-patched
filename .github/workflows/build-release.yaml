@@ -1,4 +1,7 @@
-name: Build and Release for Raspberry Pi
+name: Build and Release for Raspberry 
+
+permissions:
+  contents: write
 
 on:
   push:
@@ -69,3 +72,4 @@ jobs:
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
